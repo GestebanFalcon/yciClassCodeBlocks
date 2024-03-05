@@ -1,7 +1,19 @@
-interface attribute {
+interface Attribute {
     name: string,
     value: string
 }
+
+interface Method {
+    name: string,
+    codeBlocks: 
+}
+
+interface codeBlock {
+
+}
+
+// a bar to potentially update classes/objects for the kids to experiment with. I still don't know exactly how this could be implemented to teach them in a game format,
+// It works to update a state object that you can add "attributes" to. It works by adding an "attribute" object to an array with a name and value (like a key value pair, but I can iterate through all of them)
 
 export default function ClassBar({gameClass, setGameClass}: {gameClass: any, setGameClass: any}) {
     
@@ -14,19 +26,34 @@ export default function ClassBar({gameClass, setGameClass}: {gameClass: any, set
         setGameClass({...gameClass, attributes: newAttributes});
     }
 
+    const sex = () => {
+        return ('penis')
+    }
+
 
     return(
         <div className="min-h-screen w-3/12 flex flex-col bg-slate-500 border-2 border-slate-400 p-4">
-            <h1>{`Class name: ${gameClass.name}`}</h1>
-            <ul className=" bg-slate-600 w-full p-4">
-                {gameClass.attributes.map((attribute: attribute, index: number) => (
-                    <li key={index}>
-                        <div className="grid grid-cols-2">
-                            <span>{`${attribute.name}:`}</span>
-                            <input name={attribute.name} value={attribute.value} onChange={(e) => updateAttributes(e, index)}/>
-                        </div>
+            <h1 className="text-center">{`Class name: ${gameClass.name}`}</h1>
+            <ul className=" bg-slate-600 w-full p-4 my-4">
+                {gameClass.attributes.map((attribute: Attribute, index: number) => (
+                    <li className=" my-1" key={index}>
+
+                            <span className=" inline-block w-3/12"><span className=" flex justify-center">{`${attribute.name}:`}</span></span>
+                            <input className="text-center w-7/12 bg-slate-500  focus:outline-none" name={attribute.name} value={attribute.value} onChange={(e) => updateAttributes(e, index)}/>
+                            <span className="inline-block w-2/12">
+                            <span className="flex justify-center">
+                                <button className=" h-full w-6 rounded-full bg-gradient-to-r from-red-800 to-pink-700" onClick={sex}>X</button>
+                            </span>
+                            </span>
+
                     </li>   
                 ))}
+            </ul>
+
+            <ul className=" bg-slate-500 w-full p-4 my-4">
+                    {gameClass.methods.map(() => {
+                        
+                    })}
             </ul>
         </div>
     )
