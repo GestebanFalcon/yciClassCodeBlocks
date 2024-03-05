@@ -26,8 +26,9 @@ export default function ClassBar({gameClass, setGameClass}: {gameClass: any, set
         setGameClass({...gameClass, attributes: newAttributes});
     }
 
-    const sex = () => {
-        return ('penis')
+    const testDelete = () => {
+        console.log('Delete Button Pressed');
+        return;
     }
 
 
@@ -42,7 +43,7 @@ export default function ClassBar({gameClass, setGameClass}: {gameClass: any, set
                             <input className="text-center w-7/12 bg-slate-500  focus:outline-none" name={attribute.name} value={attribute.value} onChange={(e) => updateAttributes(e, index)}/>
                             <span className="inline-block w-2/12">
                             <span className="flex justify-center">
-                                <button className=" h-full w-6 rounded-full bg-gradient-to-r from-red-800 to-pink-700" onClick={sex}>X</button>
+                                <button className=" h-full w-6 rounded-full bg-gradient-to-r from-red-800 to-pink-700" onClick={testDelete}>X</button>
                             </span>
                             </span>
 
