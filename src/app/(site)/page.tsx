@@ -3,7 +3,8 @@ import ClassBar from "@/components/maker/classBar/classBar";
 import { useState } from "react";
 
 export default function Home() {
-  const [jawn, setJawn] = useState({name: 'goonGaming', attributes: [{name: 'girth', value: 'wide'}, {name: 'length', value: 'short'}], methods: []});
+  //test
+  const [jawn, setJawn] = useState({name: 'person', attributes: [{name: 'height', value: 'short'}, {name: 'hair', value: 'brown'}], methods: []});
 
   return (
     <>
