@@ -5,7 +5,7 @@ interface Attribute {
 
 interface Method {
     name: string,
-    codeBlocks: 
+    codeBlocks: codeBlock[]
 }
 
 interface codeBlock {
