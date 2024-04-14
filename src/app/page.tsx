@@ -1,13 +1,31 @@
-"use client"
+"use client";
 import ClassBar from "@/components/maker/classBar/classBar";
+import Display from "@/components/activityDisplay/display";
 import { useState } from "react";
+import Link from "next/link";
+import "./globals.css";
 
 export default function Home() {
-  const [jawn, setJawn] = useState({name: 'goonGaming', attributes: [{name: 'girth', value: 'wide'}, {name: 'length', value: 'short'}], methods: []});
+  const user = "Aaditya Shah";
 
   return (
-    <>
-      <ClassBar gameClass={jawn} setGameClass={setJawn}/>
-    </>
+    <div>
+      <main className="flex flex-col h-screen">
+        <header className="content-center bg-gray-100 p-4 flex items-center justify-between">
+          <h1 className="text-center text-xl font-bold">{user}'s Projects:</h1>
+          {/* You'll add search, profile, etc. components here later */}
+        </header>
+
+        <div id="button containers" className="flex flex-row gap-x-10 mt-5">
+          <Link
+            key="Get Started"
+            href="/blocklydoc"
+            className="bg-emerald-400 px-9 py-2 rounded-xl"
+          >
+            + Create New Project
+          </Link>
+        </div>
+      </main>
+    </div>
   );
 }
