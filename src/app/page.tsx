@@ -6,8 +6,6 @@ import Link from "next/link";
 import "./globals.css";
 
 export default function Home() {
-  const user = "Aaditya Shah";
-
   return (
     <div>
       <main className="flex flex-col h-screen">
