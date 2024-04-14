@@ -11,6 +11,7 @@ export default function Home() {
       <main className="flex flex-col h-screen">
         <header className="content-center bg-gray-100 p-4 flex items-center justify-between">
           <h1 className="text-center text-xl font-bold">{user}'s Projects:</h1>
+          {/* You'll add search, profile, etc. components here later */}
         </header>
 
         <div id="button containers" className="flex flex-row gap-x-10 mt-5">
