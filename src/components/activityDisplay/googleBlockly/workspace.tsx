@@ -22,6 +22,6 @@ export function Workspace() {
   });
 
   return (
-    <div ref={workspaceRef} id="workspaceDiv" className=" h-full w-full"></div>
+    <div ref={workspaceRef} id="workspaceDiv" className=" h-full w-3/4"></div>
   );
 }

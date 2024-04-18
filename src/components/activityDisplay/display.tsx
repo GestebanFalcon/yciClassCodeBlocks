@@ -2,8 +2,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { Workspace } from "./googleBlockly/workspace";
-import Toolbox from "./googleBlockly/toolbox";
-
+import { Output } from "./googleBlockly/output";
 export default function Display() {
   const [toolWidth, setToolWidth] = useState(300);
   const toolBorderRef: any = useRef(null);
@@ -22,14 +21,16 @@ export default function Display() {
   }, []);
 
   return (
-    <div className=" flex h-full flex-row" id="activityDisplayContainer">
-      <div className="p-4 absolute w-2/3 h-full" style={{ left: 0 }}>
-        <Workspace />
+    <div>
+      <div className=" flex h-full flex-row" id="activityDisplayContainer">
+        <div className="p-4 absolute w-2/3 h-full" style={{ left: 0 }}>
+          <Workspace />
+        </div>
       </div>
 
-      {/* <div className="absolute w-1/3 h-full bg-blue-500">
-
-            </div> */}
+      <div>
+        <Output />
+      </div>
     </div>
   );
 }
