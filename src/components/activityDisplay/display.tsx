@@ -27,10 +27,6 @@ export default function Display() {
           <Workspace />
         </div>
       </div>
-
-      <div>
-        <Output />
-      </div>
     </div>
   );
 }

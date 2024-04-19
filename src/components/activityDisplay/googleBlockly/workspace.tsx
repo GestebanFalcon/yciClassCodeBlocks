@@ -11,6 +11,7 @@
 import { useBlocklyWorkspace } from "react-blockly";
 import { useEffect, useRef } from "react";
 import { toolbox } from "./toolbox";
+import { javascriptGenerator } from "blockly/javascript";
 
 export function Workspace() {
   const workspaceRef = useRef(null);
@@ -20,6 +21,8 @@ export function Workspace() {
     toolboxConfiguration: toolbox,
     workspaceConfiguration: {},
   });
+
+  // const code: String = javascriptGenerator.workspaceToCode(workspace);
 
   return (
     <div ref={workspaceRef} id="workspaceDiv" className=" h-full w-3/4"></div>
