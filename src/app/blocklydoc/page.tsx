@@ -1,6 +1,5 @@
 "use client";
-import ClassBar from "@/components/maker/classBar/classBar";
-import Display from "@/components/activityDisplay/display";
+import Display from "../../components/activityDisplay/display";
 import { useState } from "react";
 
 // Import Blockly core.
@@ -17,9 +16,8 @@ export default function Home() {
   // const [jawn, setJawn] = useState({name: 'person', attributes: [{name: 'height', value: 'short'}, {name: 'hair', value: 'brown'}], methods: []});
 
   return (
-    <>
-      {/* <ClassBar gameClass={jawn} setGameClass={setJawn}/> */}
+    <main>
       <Display />
-    </>
+    </main>
   );
 }

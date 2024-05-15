@@ -1,23 +1,30 @@
 "use client";
-import ClassBar from "@/components/maker/classBar/classBar";
-import Display from "@/components/activityDisplay/display";
+
+import React from "react";
 import { useState } from "react";
 import Link from "next/link";
 import "./globals.css";
 
 export default function Home() {
-  const [jawn, setJawn] = useState({
-    name: "goonGaming",
-    attributes: [
-      { name: "girth", value: "wide" },
-      { name: "length", value: "short" },
-    ],
-    methods: [],
-  });
+  const user = "pull from auth";
 
   return (
-    <>
-      <ClassBar gameClass={jawn} setGameClass={setJawn} />
-    </>
+    <main className="flex flex-col h-screen">
+      <header className="">
+        <h1 className="text-8xl mt-40 text-white text-center text-xl font-bold">
+          Welcome to CodeYCI
+        </h1>
+      </header>
+
+      <div id="button containers" className="flex flex-row gap-x-10 mt-5">
+        <Link
+          key="Get Started"
+          href="/blocklydoc"
+          className="bg-emerald-400 px-9 py-2 rounded-xl"
+        >
+          + Create New Project
+        </Link>
+      </div>
+    </main>
   );
 }

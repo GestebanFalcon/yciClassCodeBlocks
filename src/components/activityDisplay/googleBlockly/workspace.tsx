@@ -1,4 +1,4 @@
-"use client"
+"use client";
 // // Import Blockly core.
 // import * as Blockly from 'blockly/core';
 // // Import the default blocks.
@@ -10,40 +10,21 @@
 
 import { useBlocklyWorkspace } from "react-blockly";
 import { useEffect, useRef } from "react";
-
+import { toolbox } from "./toolbox";
+import { javascriptGenerator } from "blockly/javascript";
 
 export function Workspace() {
+  const workspaceRef = useRef(null);
 
-  const workspaceRef = useRef(null)
+  const { workspace, xml } = useBlocklyWorkspace({
+    ref: workspaceRef,
+    toolboxConfiguration: toolbox,
+    workspaceConfiguration: {},
+  });
 
+  // const code: String = javascriptGenerator.workspaceToCode(workspace);
 
-    const toolbox = {
-        // There are two kinds of toolboxes. The simpler one is a flyout toolbox.
-        kind: 'flyoutToolbox',
-        // The contents is the blocks and other items that exist in your toolbox.
-        contents: [
-          {
-            kind: 'block',
-            type: 'controls_if'
-          },
-          {
-            kind: 'block',
-            type: 'controls_whileUntil'
-          }
-          // You can add more blocks to this array.
-        ]
-      };
-
-    const { workspace, xml } = useBlocklyWorkspace({
-      ref: workspaceRef,
-      toolboxConfiguration: toolbox,
-      workspaceConfiguration: {}
-    })
-
-    return(
-        <div ref={workspaceRef} id='workspaceDiv' className=" h-full w-full">
-
-
-        </div>
-    )
+  return (
+    <div ref={workspaceRef} id="workspaceDiv" className=" h-full w-3/4"></div>
+  );
 }
