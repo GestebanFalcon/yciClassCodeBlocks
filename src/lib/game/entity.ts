@@ -1,5 +1,6 @@
 import { Application, Sprite, Assets } from "pixi.js";
 import Board from "./board";
+import Fruit from "./structure/tree/fruit";
 
 export enum Direction {
     UP,
@@ -77,6 +78,21 @@ export default class Entity {
                 entities[i].takeDamage(damage);
             }
         }
+    }
+    public eat(fruit: Fruit){
+        if (!this.health || !this.maxHealth){
+            return;
+        }
+        if (!fruit.isEdible()){
+            console.log("yucky");
+            return;
+        }
+        this.health += fruit.getNutrition()!;
+        // gotta trust me isEdible already checks for it
+        if (this.health > this.maxHealth){
+            this.health = this.maxHealth;
+        }
+
     }
     public move(direction: Direction){
         const distance = 60;

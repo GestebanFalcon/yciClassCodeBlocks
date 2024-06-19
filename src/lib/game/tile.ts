@@ -2,6 +2,7 @@
 
 import { Sprite } from "pixi.js";
 import Entity from "./entity";
+import Structure from "./structure/structure";
 
 export enum TileType {
     GROUND = "GROUND",
@@ -11,6 +12,7 @@ export enum TileType {
 
 export default class Tile {
     
+    private structure?: Structure;
     private sprite: Sprite;
     private tileType: TileType;
     private texture: string;
