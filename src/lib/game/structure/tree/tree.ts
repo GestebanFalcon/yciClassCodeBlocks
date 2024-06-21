@@ -8,19 +8,16 @@ export enum TreeType {
 
 }
 
-export default class Tree implements Structure {
+export default class Tree extends Structure {
 
     private fruitCount: number;
     private type: TreeType;
-    tile: Tile;
-    texture: string;
 
-    constructor({tile, type}: {tile: Tile, type: TreeType}){
+    constructor({tile, texture, type}: {tile: Tile, texture: string, type: TreeType}){
 
+        super({tile, texture})
         this.fruitCount = Math.round(Math.random() * 5) + 5;
         this.type = type;
-        this.tile = tile;
-        this.texture = "";
 
     }
 

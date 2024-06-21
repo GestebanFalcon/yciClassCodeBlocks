@@ -1,6 +1,6 @@
 //3 types of tiles. Ground, Wall, Void. Each will have default texture. Void kills if traversed. Wall is impassible and blocks traversal.
 
-import { Sprite } from "pixi.js";
+import { Application, Assets, Sprite } from "pixi.js";
 import Entity from "./entity";
 import Structure from "./structure/structure";
 
@@ -50,6 +50,22 @@ export default class Tile {
 
         this.sprite = Sprite.from(this.texture);
         return this;
+    }
+
+    public async render(x: number, y: number, app: Application){
+        await Assets.load(this.texture);
+        this.sprite = Sprite.from(this.texture);
+
+        this.sprite.x = x;
+        this.sprite.y = y;
+        
+
+        app.stage.addChild(this.sprite);
+        
+        if (this.structure){
+            await this.structure.render({app, x, y, width: this.sprite.width, height: this.sprite.height});
+        }
+
     }
 
     public getTexture(): string{

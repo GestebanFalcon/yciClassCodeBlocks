@@ -6,34 +6,35 @@ import Tile, { TileType } from "./tile";
 
 export default class Board {
 
+    private app: Application;
     public board: Tile[][] = [];
 
-    constructor(){
+    constructor(app: Application){
+        this.app = app
         for (let i = 0; i < 13; i++){
             this.board[i] = [];
             for (let j = 0; j < 13; j++) {
-                this.board[i][j] = new Tile({type: TileType.GROUND})
+                this.board[i][j] = new Tile({type: TileType.GROUND});
             }
         }
         return this;
     }
 
-    public async render(app: Application){
+    public async render(){
         
-        let currentTexture: string;
-        let currentSprite;
-
         for (let i = 0; i < this.board.length; i++){
             for (let j = 0; j < this.board[i].length; j++){
                 
-                currentTexture = this.board[i][j].getTexture();
-                await Assets.load(currentTexture);
-                currentSprite = Sprite.from(currentTexture);
-                currentSprite.x = i * 60;
-                currentSprite.y = j * 60;
-                app.stage.addChild(currentSprite);
+                this.board[i][j].render(i * 60, j * 60, this.app);
+
             }
         }
+
+    }
+    public async insertTile(i: number, j: number, tile: Tile){
+        
+        this.board[i][j] = tile;
+        this.board[i][j].render(i*60, j*60, this.app);
 
     }
 
