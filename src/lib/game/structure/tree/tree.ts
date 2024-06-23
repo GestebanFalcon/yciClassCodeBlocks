@@ -4,7 +4,9 @@ import Fruit from "./fruit";
 
 export enum TreeType {
     STRAWBERRY = "Strawberry",
-    OAK = "Acorn"
+    OAK = "Acorn",
+    APPLE = "Apple",
+    PEAR = "Pear"
 
 }
 
@@ -13,9 +15,9 @@ export default class Tree extends Structure {
     private fruitCount: number;
     private type: TreeType;
 
-    constructor({tile, texture, type}: {tile: Tile, texture: string, type: TreeType}){
+    constructor({ texture, type}: { texture: string, type: TreeType}){
 
-        super({tile, texture})
+        super({texture})
         this.fruitCount = Math.round(Math.random() * 5) + 5;
         this.type = type;
 

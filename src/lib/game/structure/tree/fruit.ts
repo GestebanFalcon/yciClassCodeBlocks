@@ -1,4 +1,6 @@
-export default class Fruit{
+import Item from "../../item";
+
+export default class Fruit implements Item{
 
     private type: string;
     private nutrition?: number;

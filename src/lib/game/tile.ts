@@ -18,8 +18,12 @@ export default class Tile {
     private texture: string;
     private entityList: Entity[];
 
-    constructor({type, textureURL, entities}: {type: TileType, textureURL?: string, entities?: Entity[]}){
+    constructor({type, textureURL, entities, structure}: {structure?: Structure, type: TileType, textureURL?: string, entities?: Entity[]}){
         
+        if (structure){
+            this.structure = structure;
+        }
+
         this.tileType = type;
 
         if (entities) {

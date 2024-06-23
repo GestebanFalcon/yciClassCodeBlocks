@@ -1,6 +1,7 @@
 import { Application, Sprite, Assets } from "pixi.js";
 import Board from "./board";
 import Fruit from "./structure/tree/fruit";
+import Item from "./item";
 
 export enum Direction {
     UP,
@@ -20,9 +21,12 @@ export default class Entity {
     private texture: string;
     private health?: number;
     private maxHealth?: number;
+    private inventory: Item[];
 
     constructor({entityBoard, entityApp, entityTexture, me, startingCoords, entityMaxHealth}: {entityBoard: Board, entityApp: Application, entityTexture: string, me: boolean, startingCoords?: [number, number], entityMaxHealth?: number}){
         
+        this.inventory = [];
+
         this.app = entityApp;
         if (entityMaxHealth) {
             this.maxHealth = entityMaxHealth;
@@ -44,6 +48,7 @@ export default class Entity {
     private async init(app: Application){
 
         await Assets.load(this.texture);
+        console.log("loaded texture of" + this);
         this.sprite = Sprite.from(this.texture);
         app.stage.addChild(this.sprite);
         this.sprite.x = this.tileCoords[0] * 60;

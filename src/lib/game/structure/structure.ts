@@ -3,14 +3,13 @@ import Tile from "../tile";
 
 export default class Structure{
 
-    private tile: Tile;
     private sprite?: Sprite;
     public interact(): void {
     }
     private texture: string;
 
-    constructor({tile, texture}: {tile: Tile, texture: string}){
-        this.tile = tile;
+    constructor({ texture}: { texture: string}){
+        // this.tile = tile;
         this.texture = texture;
     }
 
