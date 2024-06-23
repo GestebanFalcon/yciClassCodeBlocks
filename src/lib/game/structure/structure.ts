@@ -3,12 +3,15 @@ import Tile from "../tile";
 
 export default class Structure{
 
+    public isTree: Boolean;
     private sprite?: Sprite;
     public interact(): void {
-    }
+    };
+    shake?(): any;
     private texture: string;
 
     constructor({ texture}: { texture: string}){
+        this.isTree = false;
         // this.tile = tile;
         this.texture = texture;
     }

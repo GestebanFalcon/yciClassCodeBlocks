@@ -2,6 +2,7 @@ import { Application, Sprite, Assets } from "pixi.js";
 import Board from "./board";
 import Fruit from "./structure/tree/fruit";
 import Item from "./item";
+import Tree from "./structure/tree/tree";
 
 export enum Direction {
     UP,
@@ -146,5 +147,25 @@ export default class Entity {
     }
     public getSprite(){
         return this.sprite;
+    }
+    public shakeTree(){
+
+        console.log("shaking");
+
+        if (this.getTile().structure?.shake) {
+            
+            console.log("is tree");
+
+            const fruit = this.getTile().structure!.shake!();
+            //typescript when i literally just checked for it O:
+            if (fruit) {
+                this.inventory.push(fruit);
+                console.log(fruit);
+            } else {
+                console.log ("no fruit :(");
+            }
+            
+
+        }
     }
 }

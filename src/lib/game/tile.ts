@@ -12,7 +12,7 @@ export enum TileType {
 
 export default class Tile {
     
-    private structure?: Structure;
+    public structure?: Structure;
     private sprite: Sprite;
     private tileType: TileType;
     private texture: string;

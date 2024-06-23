@@ -20,6 +20,7 @@ export default class Tree extends Structure {
         super({texture})
         this.fruitCount = Math.round(Math.random() * 5) + 5;
         this.type = type;
+        this.isTree = true;
 
     }
 

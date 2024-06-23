@@ -48,6 +48,10 @@ export default function GameDisplay(){
                 if (e.key === "f") {
                     johnathmald.punch(20)
                 }
+                if (e.key === "r") {
+                    johnathmald.shakeTree();
+                }
+                console.log(gameBoard.board);
             })
 
             
