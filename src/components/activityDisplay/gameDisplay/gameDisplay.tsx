@@ -21,7 +21,7 @@ export default function GameDisplay(){
             await gameBoard.render();
             
 
-            const johnathmald = new Entity({entityBoard: gameBoard, entityApp: app, entityTexture: "https://cdn.discordapp.com/attachments/756268999586873524/1247970134551691295/johnathmald.png?ex=667319c2&is=6671c842&hm=93ef1cc00aa35a8850856f708af39caa266a8ebc720b0e998d18832e6fb1ce1a&", me: true});
+            const johnathmald = new Entity({entityMaxHealth: 30, entityBoard: gameBoard, entityApp: app, entityTexture: "https://cdn.discordapp.com/attachments/756268999586873524/1247970134551691295/johnathmald.png?ex=667319c2&is=6671c842&hm=93ef1cc00aa35a8850856f708af39caa266a8ebc720b0e998d18832e6fb1ce1a&", me: true});
             console.log(johnathmald);
             
             const michael = new Entity({entityMaxHealth: 30, entityBoard: gameBoard, entityApp: app, entityTexture: "https://cdn.discordapp.com/attachments/1197378900779610183/1252738343851135037/Michael.png?ex=66734eff&is=6671fd7f&hm=da2288f12cfc0bf72fc8bb03ffeb122ea6a4f847dead4ba1fa0d29af0d506890&", me: false, startingCoords: [5, 5]});
@@ -51,7 +51,9 @@ export default function GameDisplay(){
                 if (e.key === "r") {
                     johnathmald.shakeTree();
                 }
-                console.log(gameBoard.board);
+                if (e.key === "e") {
+                    johnathmald.eatSlot(0);
+                }
             })
 
             

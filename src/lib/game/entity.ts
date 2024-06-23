@@ -22,7 +22,7 @@ export default class Entity {
     private texture: string;
     private health?: number;
     private maxHealth?: number;
-    private inventory: Item[];
+    private inventory: Fruit[];
 
     constructor({entityBoard, entityApp, entityTexture, me, startingCoords, entityMaxHealth}: {entityBoard: Board, entityApp: Application, entityTexture: string, me: boolean, startingCoords?: [number, number], entityMaxHealth?: number}){
         
@@ -85,8 +85,15 @@ export default class Entity {
             }
         }
     }
-    public eat(fruit: Fruit){
+    public eatSlot(invSlot: number){
+        if (this.inventory[invSlot]){
+            this.eat(this.inventory[invSlot]);
+        }
+    }
+    private eat(fruit: Fruit){
+        console.log("nom nom nom");
         if (!this.health || !this.maxHealth){
+            console.log('sad');
             return;
         }
         if (!fruit.isEdible()){
@@ -98,6 +105,7 @@ export default class Entity {
         if (this.health > this.maxHealth){
             this.health = this.maxHealth;
         }
+        console.log("yum yum " + this.health );
 
     }
     public move(direction: Direction){
@@ -161,6 +169,7 @@ export default class Entity {
             if (fruit) {
                 this.inventory.push(fruit);
                 console.log(fruit);
+                console.log(this.inventory);
             } else {
                 console.log ("no fruit :(");
             }
