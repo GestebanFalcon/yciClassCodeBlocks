@@ -33,7 +33,7 @@ export default class Board {
     }
     public async insertTile(i: number, j: number, tile: Tile){
         
-        this.board[i][j] = tile;
+        this.board[i][j] = tile;    
         this.board[i][j].render(j*60, i*60, this.app);
 
     }

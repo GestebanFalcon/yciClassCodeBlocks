@@ -1,3 +1,4 @@
+import Entity from "../../entity";
 import Item from "../../item";
 
 export default class Fruit implements Item{
@@ -25,6 +26,9 @@ export default class Fruit implements Item{
     }
     public getNutrition(){
         return this.nutrition;
+    }
+    public onEat(entity: Entity){
+        
     }
 
 }
