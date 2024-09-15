@@ -6,6 +6,7 @@ import Board from "@/lib/game/board";
 import Entity, { Direction } from "@/lib/game/entity";
 import Tree, { TreeType } from "@/lib/game/structure/tree/tree";
 import Tile, { TileType } from "@/lib/game/tile";
+import Level from "@/lib/game/level";
 
 export default function GameDisplay() {
 
@@ -17,8 +18,7 @@ export default function GameDisplay() {
             await app.init({ width: 780, height: 780 })
             document.getElementById("stageDiv")?.appendChild(app.canvas);
 
-            
-
+            const level = new Level(1, app)
 
 
         }

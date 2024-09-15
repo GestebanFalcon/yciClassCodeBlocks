@@ -5,6 +5,7 @@ import defaultGrassLarge from "@/public/defaultGrassLarge.png";
 import { Application, Assets, Sprite, TextureSourceLike } from "pixi.js";
 import Entity from "./entity";
 import Structure from "./structure/structure";
+import Board from "./board";
 
 export enum TileType {
     GROUND = "GROUND",
@@ -14,14 +15,16 @@ export enum TileType {
 
 export default class Tile {
 
+    public board: Board;
     public structure?: Structure;
     private sprite: Sprite;
     private tileType: TileType;
     private texture: any;
     private entityList: Entity[];
 
-    constructor({ type, textureURL, entities, structure }: { structure?: Structure, type: TileType, textureURL?: string, entities?: Entity[] }) {
+    constructor({ type, textureURL, entities, structure, board }: { structure?: Structure, type: TileType, textureURL?: string, entities?: Entity[], board: Board }) {
 
+        this.board = board;
         if (structure) {
             this.structure = structure;
         }
@@ -56,6 +59,10 @@ export default class Tile {
 
         this.sprite = Sprite.from(this.texture);
         return this;
+    }
+
+    public deRender() {
+        this.board.app.stage.removeChild(this.sprite);
     }
 
     public async render(x: number, y: number, app: Application) {

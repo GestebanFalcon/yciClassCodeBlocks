@@ -23,10 +23,13 @@ export default class Entity {
     private health?: number;
     private maxHealth?: number;
     private inventory: Fruit[];
+    private dimensions?: [number, number]
 
-    constructor({ entityBoard, entityApp, entityTexture, me, startingCoords, entityMaxHealth }: { entityBoard: Board, entityApp: Application, entityTexture: string, me: boolean, startingCoords?: [number, number], entityMaxHealth?: number }) {
+    constructor({ entityBoard, entityApp, entityTexture, me, startingCoords, entityMaxHealth, dimensions }: { entityBoard: Board, entityApp: Application, entityTexture: string, me: boolean, startingCoords?: [number, number], dimensions?: [number, number], entityMaxHealth?: number }) {
 
-
+        if (dimensions) {
+            this.dimensions = dimensions;
+        }
         //if undefined is passed in as board, everthing breaks. So don't let it break please. It is solved by reloading the page i think though. Its client caused and only hurts the client idc.
         this.inventory = [];
 
@@ -43,6 +46,7 @@ export default class Entity {
         } else {
             this.tileCoords = [0, 0];
         }
+        console.log(this.getTile());
         this.getTile()?.addEntity(this);
         this.texture = entityTexture;
         this.init(entityApp);
@@ -53,7 +57,14 @@ export default class Entity {
         await Assets.load(this.texture);
         console.log("loaded texture of" + this);
         this.sprite = Sprite.from(this.texture);
+
+        // if (this.dimensions) {
+        //     this.sprite.width = this.dimensions[0];
+        //     this.sprite.height = this.dimensions[1];
+        // }
+
         app.stage.addChild(this.sprite);
+        console.log("Added child to stage");
         this.sprite.x = this.tileCoords[0] * 60;
         this.sprite.y = this.tileCoords[1] * 60;
 
@@ -182,7 +193,7 @@ export default class Entity {
 
         }
     }
-    public() {
+    public death() {
         //it should really have a board. it is definitely assigned in the constructor and can only be undefined after this or if i pass in undefined like an ape
         this.getTile()?.boonkEntity(this)
         this.board = undefined;

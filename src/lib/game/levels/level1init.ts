@@ -6,20 +6,20 @@ import { TileType } from "../tile";
 import Tile from "../tile";
 import { TreeType } from "../structure/tree/tree";
 import { Direction } from "../entity";
+import Level from "../level";
 
-export default async (gameboard: Board, app: Application) => {
-    const johnathmald = new Entity({ entityMaxHealth: 30, entityBoard: gameboard, entityApp: app, entityTexture: "https://i.postimg.cc/rmXbRc1v/johnathmald.png", me: true });
+export default async (level: Level) => {
+    const johnathmald = new Entity({ entityMaxHealth: 30, entityBoard: level.board, entityApp: level.app, entityTexture: "https://i.postimg.cc/rmXbRc1v/johnathmald.png", me: true });
     console.log(johnathmald);
 
-    const michael = new Entity({ entityMaxHealth: 30, entityBoard: gameboard, entityApp: app, entityTexture: "https://i.postimg.cc/rmXbRc1v/johnathmald.png", me: false, startingCoords: [5, 5] });
+    const michael = new Entity({ entityMaxHealth: 30, entityBoard: level.board, entityApp: level.app, entityTexture: "https://i.postimg.cc/rmXbRc1v/johnathmald.png", me: false, startingCoords: [5, 5] });
 
 
-    const jeremiah = new Tree({ texture: "https://i.postimg.cc/rmXbRc1v/johnathmald.png", type: TreeType.STRAWBERRY });
-    const miranda = new Tile({ type: TileType.GROUND, structure: jeremiah });
-    await gameboard.insertTile(3, 2, miranda);
+    const jeremiah = new Tree({ texture: "https://png.pngtree.com/png-vector/20240208/ourmid/pngtree-green-tree-plant-forest-png-image_11716383.png", type: TreeType.STRAWBERRY, });
+    const miranda = new Tile({ type: TileType.GROUND, structure: jeremiah, board: level.board });
+    await level.board.insertTile(3, 2, miranda);
 
-
-    document.addEventListener("keypress", (e) => {
+    const moveListener = (e: KeyboardEvent) => {
         if (e.key === "w") {
             johnathmald.move(Direction.UP);
         }
@@ -41,5 +41,14 @@ export default async (gameboard: Board, app: Application) => {
         if (e.key === "e") {
             johnathmald.eatSlot(0);
         }
+
+    }
+
+    document.addEventListener("keypress", moveListener);
+
+    console.log(level.board);
+    await level.renderBoard();
+    return (() => {
+        document.removeEventListener("keypress", moveListener);
     })
 }

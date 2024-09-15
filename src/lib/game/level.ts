@@ -11,27 +11,37 @@ import levels from "./levels/levels";
 
 export default class Level {
 
-    app: Application;
-    board: Board
-    number: number
-    setup: Function
+    public app: Application;
+    public board: Board;
+    private number: number;
+    private setup: Function;
+    private removeListeners?: Function;
 
     constructor(number: number, app: Application) {
         this.app = app;
         this.number = number;
         this.setup = levels[number - 1];
+        this.board = new Board(app);
 
-        this.board = new Board(this.app)
-
-        const init = async () => {
-            await this.board.render();
-
-            await this.setup();
-        }
-        init();
-
+        this.init();
 
     }
+    async init() {
+        await this.board.render();
+        console.log("board rendered")
+        this.removeListeners = await this.setup(this);
 
+    }
+    public async reload() {
+        this.app.stage.removeChildren();
+        this.removeListeners && this.removeListeners();
+        this.board = new Board(this.app);
+        await this.board.render();
+        this.removeListeners = await this.setup(this);
+
+    }
+    public async renderBoard() {
+        await this.board.render();
+    }
 
 }
