@@ -57,6 +57,7 @@ export default class Entity {
         await Assets.load(this.texture);
         console.log("loaded texture of" + this);
         this.sprite = Sprite.from(this.texture);
+        this.sprite.zIndex = 1
 
         // if (this.dimensions) {
         //     this.sprite.width = this.dimensions[0];

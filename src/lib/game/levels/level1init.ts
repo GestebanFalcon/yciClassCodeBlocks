@@ -17,7 +17,7 @@ export default async (level: Level) => {
 
     const jeremiah = new Tree({ texture: "https://png.pngtree.com/png-vector/20240208/ourmid/pngtree-green-tree-plant-forest-png-image_11716383.png", type: TreeType.STRAWBERRY, });
     const miranda = new Tile({ type: TileType.GROUND, structure: jeremiah, board: level.board });
-    await level.board.insertTile(3, 2, miranda);
+    level.board.insertTile(3, 2, miranda);
 
     const moveListener = (e: KeyboardEvent) => {
         if (e.key === "w") {
@@ -40,6 +40,9 @@ export default async (level: Level) => {
         }
         if (e.key === "e") {
             johnathmald.eatSlot(0);
+        }
+        if (e.key === "l") {
+            level.reload();
         }
 
     }

@@ -25,18 +25,16 @@ export default class Board {
         for (let i = 0; i < this.board.length; i++) {
             for (let j = 0; j < this.board[i].length; j++) {
 
-                this.board[i][j].render(i * 60, j * 60, this.app);
+                await this.board[i][j].render(j * 60, i * 60, this.app);
 
             }
         }
 
     }
-    public async insertTile(i: number, j: number, tile: Tile) {
+    public insertTile(i: number, j: number, tile: Tile) {
 
         this.board[i][j].deRender();
         this.board[i][j] = tile;
-        this.board
-        this.board[i][j].render(j * 60, i * 60, this.app);
 
 
     }
