@@ -15,6 +15,12 @@ const config: Config = {
     //   'blue': '#04D9D9'
     // },
     extend: {
+      spacing: {
+        "128": "32rem",
+        "144": "36rem",
+        "160": "40rem",
+      },
+
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
