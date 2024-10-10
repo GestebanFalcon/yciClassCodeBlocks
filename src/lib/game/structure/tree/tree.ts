@@ -15,9 +15,9 @@ export default class Tree extends Structure {
     private fruitCount: number;
     private type: TreeType;
 
-    constructor({ texture, type}: { texture: string, type: TreeType}){
+    constructor({ texture, type }: { texture: string, type: TreeType }) {
 
-        super({texture})
+        super({ texture })
         this.fruitCount = Math.round(Math.random() * 5) + 5;
         this.type = type;
         this.isTree = true;
@@ -25,7 +25,7 @@ export default class Tree extends Structure {
     }
 
     public interact(): void {
-        console.log("its a tree")
+        console.log("its a tree");
     }
 
     shake(): undefined | Fruit {
@@ -35,9 +35,9 @@ export default class Tree extends Structure {
         if (Math.random() < 0.5) {
             return;
         }
-        this.fruitCount --;
-        return (new Fruit({type: this.type}));
+        this.fruitCount--;
+        return (new Fruit({ type: this.type }));
     }
-    
+
 
 }
