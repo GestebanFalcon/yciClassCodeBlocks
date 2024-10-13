@@ -1,0 +1,56 @@
+datasource db {
+    provider = "mongodb"
+    url      = env("DATABASE_URL")
+}
+
+generator client {
+    provider = "prisma-client-js"
+}
+
+model Structure {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    texture  String
+    treeType String?
+
+    tile Tile?
+}
+
+model Entity {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    maxHealth     Int
+    texture       String
+    tile          Tile?   @relation(fields: [tildId], references: [id])
+    tildId        String  @db.ObjectId
+    mainCharacter Boolean
+}
+
+model Tile {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    Level   Level? @relation(fields: [LevelId], references: [id])
+    LevelId String @db.ObjectId
+    index   Int[]
+    texture String
+
+    entities    Entity[]
+    structure   Structure? @relation(fields: [structureId], references: [id])
+    structureId String?    @unique @db.ObjectId
+}
+
+model Level {
+    id String @id @default(auto()) @map("_id") @db.ObjectId
+
+    tiles Tile[]
+
+    index      Int
+    dimensions Int[]
+}
+
+enum TreeType {
+    STRAWBERRY
+    OAK
+    APPLE
+    PEAR
+}

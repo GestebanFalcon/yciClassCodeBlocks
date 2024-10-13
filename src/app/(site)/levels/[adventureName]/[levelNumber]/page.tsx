@@ -1,11 +1,20 @@
-import GameDisplay from "@/components/activityDisplay/gameDisplay/gameDisplay";
+import Display from "./display";
+
+
 
 export default async function GameTest({ params }: { params: { levelNumber: number, adventureName: string } }) {
 
-    return (
 
-        <div className=" w-full h-full">
-            <GameDisplay levelNumber={params.levelNumber} />
-        </div>
+
+
+    return (
+        <>
+            <Display levelNumber={params.levelNumber} adventureName={params.adventureName} />
+
+
+
+            {/* <GameDisplay levelNumber={params.levelNumber} />
+            <Workspace /> */}
+        </>
     )
 }

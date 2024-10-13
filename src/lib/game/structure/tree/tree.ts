@@ -13,9 +13,9 @@ export enum TreeType {
 export default class Tree extends Structure {
 
     private fruitCount: number;
-    private type: TreeType;
+    private type: string;
 
-    constructor({ texture, type }: { texture: string, type: TreeType }) {
+    constructor({ texture, type }: { texture: string, type: string }) {
 
         super({ texture })
         this.fruitCount = Math.round(Math.random() * 5) + 5;
@@ -39,5 +39,14 @@ export default class Tree extends Structure {
         return (new Fruit({ type: this.type }));
     }
 
+
+    public toJSON() {
+        const json = {
+            isTree: true,
+            treeType: this.type,
+            texture: this.texture
+        }
+        return json;
+    }
 
 }

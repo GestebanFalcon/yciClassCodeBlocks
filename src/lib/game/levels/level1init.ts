@@ -9,7 +9,8 @@ import { Direction } from "../entity";
 import Level from "../level";
 
 export default async (level: Level) => {
-    const johnathmald = new Entity({ entityMaxHealth: 30, entityBoard: level.board, entityApp: level.app, entityTexture: "https://i.postimg.cc/rmXbRc1v/johnathmald.png", me: true });
+    const johnathmald = level.mainCharacter;
+
     console.log(johnathmald);
 
     const michael = new Entity({ entityMaxHealth: 30, entityBoard: level.board, entityApp: level.app, entityTexture: "https://i.postimg.cc/rmXbRc1v/johnathmald.png", me: false, startingCoords: [5, 5] });
@@ -21,16 +22,16 @@ export default async (level: Level) => {
 
     const moveListener = (e: KeyboardEvent) => {
         if (e.key === "w") {
-            johnathmald.move(Direction.UP);
+            johnathmald.move("up");
         }
         if (e.key === "s") {
-            johnathmald.move(Direction.DOWN);
+            johnathmald.move("down");
         }
         if (e.key === "a") {
-            johnathmald.move(Direction.LEFT);
+            johnathmald.move("left");
         }
         if (e.key === "d") {
-            johnathmald.move(Direction.RIGHT);
+            johnathmald.move("right");
         }
         if (e.key === "f") {
             johnathmald.punch(20)

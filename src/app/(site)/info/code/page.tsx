@@ -8,7 +8,6 @@ export default function Code() {
                 <CardHolder>
                     <Card adventureName="BreezyAwakenings" heading="Breezy Awakenings" content="Coderbot has woken up on a strange island. Learn the fundamentals by writing code to navigate this new, strange world." />
                 </CardHolder>
-
             </section>
         </div>
     )

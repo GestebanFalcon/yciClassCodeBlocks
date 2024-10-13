@@ -7,6 +7,8 @@ import Entity from "./entity";
 import Structure from "./structure/structure";
 import Board from "./board";
 
+
+
 export enum TileType {
     GROUND = "GROUND",
     WALL = "WALL",
@@ -95,5 +97,15 @@ export default class Tile {
     }
     public getEntities() {
         return ([...this.entityList]);
+    }
+    public toJSON(index: [number, number]) {
+        return ({
+            entities: (
+                this.getEntities().map(entity => (entity.toJSON()))
+            ),
+            index,
+            texture: this.texture,
+            structure: this.structure
+        })
     }
 }

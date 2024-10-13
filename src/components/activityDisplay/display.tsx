@@ -8,7 +8,7 @@ export default function Display() {
     const [toolWidth, setToolWidth] = useState(300);
     const toolBorderRef: any = useRef(null);
     const toolRef: any = useRef(null)
-    
+
 
     const onMouseDown = (event: MouseEvent) => {
     };
@@ -18,7 +18,7 @@ export default function Display() {
     };
 
     const onMouseUp = (event: MouseEvent) => {
-        
+
     };
 
     useEffect(() => {
@@ -28,7 +28,7 @@ export default function Display() {
         // addEventListener('mousedown', onMouseDown);
     }, [])
 
-    return(
+    return (
         <div className=" flex h-full flex-row" id="activityDisplayContainer">
             {/* <div className='absolute h-full bg-green-500' style={{width: toolWidth}}>
 
@@ -39,8 +39,8 @@ export default function Display() {
                 <div ref={toolBorderRef} className='absolute z-20 w-2 bg-black h-full hover:cursor-ew-resize' style={{ left: toolWidth - 4}}></div>
             </div> */}
 
-            <div className="p-4 absolute w-2/3 h-full bg-red-500" style={{ left: 0}}>
-                <Workspace/>
+            <div className="p-0 absolute w-2/3 h-full bg-red-500" style={{ left: 0 }}>
+                <Workspace />
             </div>
 
             {/* <div className="absolute w-1/3 h-full bg-blue-500">

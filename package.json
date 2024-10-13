@@ -6,14 +6,19 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prismaDev": "dotenv -e .env.local -- prisma generate"
   },
   "dependencies": {
     "@pixi/react": "^7.1.2",
+    "@prisma/client": "^5.20.0",
     "@types/react-resizable": "^3.0.7",
     "blockly": "^10.4.3",
+    "dotenv-cli": "^7.4.2",
+    "js-interpreter": "^5.2.1",
     "next": "^14.2.8",
     "pixi.js": "^8.1.5",
+    "prisma": "^5.20.0",
     "react": "^18",
     "react-blockly": "^8.1.1",
     "react-dom": "^18",

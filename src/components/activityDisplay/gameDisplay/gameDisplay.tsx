@@ -13,27 +13,11 @@ export default function GameDisplay({ levelNumber }: { levelNumber: number }) {
 
     const [isComplete, setIsComplete] = useState(false);
 
-    useEffect(() => {
-
-        const pixiInit = async () => {
-
-            const app = new Application();
-            await app.init({ width: 780, height: 780 })
-            document.getElementById("stageDiv")?.appendChild(app.canvas);
-
-            const level = new Level(levelNumber, app, setIsComplete)
-            await level.init();
-
-
-        }
-
-        pixiInit();
-
-    }, [])
+    
 
     return (
         <div id="stageDiv">
 
-        </div>
+        </div>  
     )
 }

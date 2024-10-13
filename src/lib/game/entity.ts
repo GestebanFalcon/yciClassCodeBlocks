@@ -20,12 +20,12 @@ export default class Entity {
     private tileCoords: [number, number]
     private sprite!: Sprite;
     private texture: string;
-    private health?: number;
-    private maxHealth?: number;
+    private health: number;
+    private maxHealth: number;
     private inventory: Fruit[];
     private dimensions?: [number, number]
 
-    constructor({ entityBoard, entityApp, entityTexture, me, startingCoords, entityMaxHealth, dimensions }: { entityBoard: Board, entityApp: Application, entityTexture: string, me: boolean, startingCoords?: [number, number], dimensions?: [number, number], entityMaxHealth?: number }) {
+    constructor({ board, app, texture, me, startingCoords, maxHealth, dimensions }: { board: Board, app: Application, texture: string, me: boolean, startingCoords?: [number, number], dimensions?: [number, number], maxHealth: number }) {
 
         if (dimensions) {
             this.dimensions = dimensions;
@@ -33,14 +33,14 @@ export default class Entity {
         //if undefined is passed in as board, everthing breaks. So don't let it break please. It is solved by reloading the page i think though. Its client caused and only hurts the client idc.
         this.inventory = [];
 
-        this.app = entityApp;
-        if (entityMaxHealth) {
-            this.maxHealth = entityMaxHealth;
-            this.health = this.maxHealth;
-        }
+        this.app = app;
+
+        this.maxHealth = maxHealth;
+        this.health = this.maxHealth;
+
 
         this.me = me;
-        this.board = entityBoard;
+        this.board = board;
         if (startingCoords) {
             this.tileCoords = [...startingCoords];
         } else {
@@ -48,8 +48,8 @@ export default class Entity {
         }
         console.log(this.getTile());
         this.getTile()?.addEntity(this);
-        this.texture = entityTexture;
-        this.init(entityApp);
+        this.texture = texture;
+        this.init(app);
 
     }
     private async init(app: Application) {
@@ -125,30 +125,30 @@ export default class Entity {
         console.log("yum yum " + this.health);
 
     }
-    public move(direction: Direction) {
+    public move(direction: string) {
         const distance = 60;
         const preCoords: [number, number] = [...this.tileCoords];
         this.getTile()?.boonkEntity(this);
 
-        if (direction === Direction.RIGHT) {
+        if (direction === "right") {
             this.tileCoords[1]++;
             if (this.checkCoords(preCoords)) {
                 this.sprite.x += distance;
             }
         }
-        if (direction === Direction.LEFT) {
+        if (direction === "left") {
             this.tileCoords[1]--;
             if (this.checkCoords(preCoords)) {
                 this.sprite.x -= distance;
             }
         }
-        if (direction === Direction.UP) {
+        if (direction === "up") {
             this.tileCoords[0]--;
             if (this.checkCoords(preCoords)) {
                 this.sprite.y -= distance;
             }
         }
-        if (direction === Direction.DOWN) {
+        if (direction === "down") {
             this.tileCoords[0]++;
             if (this.checkCoords(preCoords)) {
                 this.sprite.y += distance;
@@ -199,5 +199,20 @@ export default class Entity {
         this.getTile()?.boonkEntity(this)
         this.board = undefined;
         this.app.stage.removeChild(this.sprite); //ill finish tomorrow. You still need to cut the cord with the tile and yteah. Look at the sheet. Cut the things it refers to then the things that refer to it if possible.
+    }
+    public toJSON() {
+        return {
+            texture: this.texture,
+            maxHealth: this.maxHealth,
+            mainCharacter: this.me,
+            startingCoords: this.tileCoords
+
+        }
+    }
+    public static fromJSON({app, board, texture, maxHealth, mainCharacter, startingCoords }: { app: Application, board: Board, texture: string, maxHealth: number, mainCharacter: boolean, startingCoords: [number, number] }): Entity {
+        return (
+            new Entity({app, board, texture, maxHealth, me: mainCharacter, startingCoords})
+        )
+
     }
 }
