@@ -108,4 +108,5 @@ export default class Tile {
             structure: this.structure
         })
     }
+
 }

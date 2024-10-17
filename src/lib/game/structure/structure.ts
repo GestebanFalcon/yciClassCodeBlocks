@@ -1,6 +1,5 @@
 import { Application, Assets, Sprite } from "pixi.js";
 import Tile from "../tile";
-import Tree, { TreeType } from "./tree/tree";
 
 export default class Structure {
 
@@ -34,10 +33,6 @@ export default class Structure {
 
     }
 
-    public static fromJSON({ treeType, texture }: { treeType?: string, texture: string }): any {
-        if (treeType) {
-            return new Tree({ type: treeType, texture })
-        }
-    }
+
 
 }  

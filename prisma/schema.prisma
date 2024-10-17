@@ -46,6 +46,7 @@ model Level {
 
     index      Int
     dimensions Int[]
+    mainCoords Int[]
 }
 
 enum TreeType {

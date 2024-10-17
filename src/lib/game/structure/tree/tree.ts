@@ -49,4 +49,10 @@ export default class Tree extends Structure {
         return json;
     }
 
+    public static fromJSON({ treeType, texture }: { treeType?: string, texture: string }): any {
+        if (treeType) {
+            return new Tree({ type: treeType, texture });
+        }
+    }
+
 }

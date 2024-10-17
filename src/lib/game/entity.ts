@@ -74,6 +74,10 @@ export default class Entity {
         }
 
     }
+
+    public getTileCoords() {
+        return this.tileCoords;
+    }
     private die() {
         this.app.stage.removeChild(this.sprite);
     }
@@ -209,9 +213,9 @@ export default class Entity {
 
         }
     }
-    public static fromJSON({app, board, texture, maxHealth, mainCharacter, startingCoords }: { app: Application, board: Board, texture: string, maxHealth: number, mainCharacter: boolean, startingCoords: [number, number] }): Entity {
+    public static fromJSON({ app, board, texture, maxHealth, mainCharacter, startingCoords }: { app: Application, board: Board, texture: string, maxHealth: number, mainCharacter: boolean, startingCoords: [number, number] }): Entity {
         return (
-            new Entity({app, board, texture, maxHealth, me: mainCharacter, startingCoords})
+            new Entity({ app, board, texture, maxHealth, me: mainCharacter, startingCoords })
         )
 
     }
