@@ -13,30 +13,31 @@ model Structure {
     texture  String
     treeType String?
 
-    tile Tile?
+    tile   Tile?   @relation(fields: [tileId], references: [id])
+    tileId String? @unique @db.ObjectId
 }
 
 model Entity {
     id String @id @default(auto()) @map("_id") @db.ObjectId
 
-    maxHealth     Int
-    texture       String
-    tile          Tile?   @relation(fields: [tildId], references: [id])
-    tildId        String  @db.ObjectId
-    mainCharacter Boolean
+    maxHealth      Int
+    texture        String
+    tile           Tile?   @relation(fields: [tildId], references: [id])
+    tildId         String? @db.ObjectId
+    mainCharacter  Boolean
+    startingCoords Int[]
 }
 
 model Tile {
     id String @id @default(auto()) @map("_id") @db.ObjectId
 
-    Level   Level? @relation(fields: [LevelId], references: [id])
-    LevelId String @db.ObjectId
+    Level   Level?  @relation(fields: [LevelId], references: [id])
+    LevelId String? @db.ObjectId
     index   Int[]
     texture String
 
-    entities    Entity[]
-    structure   Structure? @relation(fields: [structureId], references: [id])
-    structureId String?    @unique @db.ObjectId
+    entities  Entity[]
+    structure Structure?
 }
 
 model Level {

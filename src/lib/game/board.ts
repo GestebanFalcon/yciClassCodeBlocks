@@ -2,6 +2,7 @@ import { Application, Sprite, Assets } from "pixi.js";
 import Tile, { TileType } from "./tile";
 import Entity from "./entity";
 import Structure from "./structure/structure";
+import Tree from "./structure/tree/tree";
 
 // board will be generated as an array full of default tile blocks.
 // board size is (Currently) 10x10 tiles of size 60px x 60px
@@ -44,7 +45,7 @@ export default class Board {
                         entities: entitiesList,
 
                     }
-                    currentTile.structure && (options.structure = Structure.fromJSON({ treeType: currentTile.structure.treeType, texture: currentTile.structure.texture }))
+                    currentTile.structure && (options.structure = Tree.fromJSON({ treeType: currentTile.structure.treeType, texture: currentTile.structure.texture }))
                     //I shouldn't need to spread here but I'll put a comment just in case it breaks.
                     this.board[i][j] = new Tile(options);
                 }
@@ -53,7 +54,7 @@ export default class Board {
         if (dimensions) {
             for (let i = 0; i < dimensions[0]; i++) {
                 this.board[i] = [];
-                for (let j = 0; j < dimensions[0]; j++) {
+                for (let j = 0; j < dimensions[1]; j++) {
                     this.board[i][j] = new Tile({ type: TileType.GROUND, board: this });
                 }
             }
@@ -72,7 +73,7 @@ export default class Board {
     }
 
     public async render() {
-
+        console.log("rendering board");
         for (let i = 0; i < this.board.length; i++) {
             for (let j = 0; j < this.board[i].length; j++) {
 
@@ -80,6 +81,7 @@ export default class Board {
 
             }
         }
+        console.log(this.board);
 
     }
     public insertTile(i: number, j: number, tile: Tile) {
@@ -90,7 +92,19 @@ export default class Board {
 
     }
     public async deRender() {
-
+        for (let i = 0; i < this.board.length; i++) {
+            for (let j = 0; j < this.board[i].length; j++) {
+                this.board[i][j].deRender();
+            }
+        }
     }
+    public cloneFrom(oldBoard: Board) {
+        for (let i = 0; i < oldBoard.board.length; i++) {
+            for (let j = 0; j < oldBoard.board[i].length; j++) {
+                this.board[i][j] = oldBoard.board[i][j].clone(this);
+            }
+        }
+    }
+    public resetBoard() { }
 
 }

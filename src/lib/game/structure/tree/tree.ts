@@ -39,6 +39,9 @@ export default class Tree extends Structure {
         return (new Fruit({ type: this.type }));
     }
 
+    public clone() {
+        return new Tree({ texture: this.texture, type: this.type });
+    }
 
     public toJSON() {
         const json = {

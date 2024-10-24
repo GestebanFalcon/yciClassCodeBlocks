@@ -63,13 +63,25 @@ export default class Tile {
         return this;
     }
 
-    public deRender() {
+    public async reRender() {
         this.board.app.stage.removeChild(this.sprite);
+        // this.board.app.stage.addChild(this.sprite);
+        await this.render(this.sprite.x, this.sprite.y, this.board.app);
+    }
+
+    public deRender() {
+        this.structure && this.structure.deRender();
+        for (const entity of this.entityList) {
+            entity.deRender();
+        }
+        this.sprite.destroy();
     }
 
     public async render(x: number, y: number, app: Application) {
+        for (const entity of this.entityList) {
+            await entity.render()
+        }
         await Assets.load(this.texture);
-        console.log(this.texture);
         this.sprite = Sprite.from(this.texture);
 
         this.sprite.x = x;
@@ -87,6 +99,9 @@ export default class Tile {
     public getTexture(): string {
         return this.texture;
     }
+    public setStructure(structure: Structure) {
+        this.structure = structure;
+    }
 
     public boonkEntity(boonkedEntity: Entity) {
         const newEntityList = this.entityList.filter(e => (e !== boonkedEntity));
@@ -95,9 +110,20 @@ export default class Tile {
     public addEntity(addedEntity: Entity) {
         this.entityList.push(addedEntity);
     }
+    public getMainCharacter() {
+        for (const entity of this.entityList) {
+            if (entity.isMe()) {
+                return entity;
+            }
+        }
+    }
     public getEntities() {
         return ([...this.entityList]);
     }
+    // public getEntity() {
+    //     const entity = this.entityList[0];
+    //     return (entity);
+    // }
     public toJSON(index: [number, number]) {
         return ({
             entities: (
@@ -107,6 +133,11 @@ export default class Tile {
             texture: this.texture,
             structure: this.structure
         })
+    }
+    public clone(newBoard: Board) {
+        const clonedEntities = this.entityList.map(entity => entity.clone(newBoard));
+        // const clonedEntities: Entity[] = [];
+        return new Tile({ type: this.tileType, textureURL: this.texture, entities: clonedEntities, structure: this.structure && this.structure.clone(), board: newBoard });
     }
 
 }

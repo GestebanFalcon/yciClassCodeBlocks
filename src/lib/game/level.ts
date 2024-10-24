@@ -20,21 +20,29 @@ export default class Level {
     public mainCharacter: Entity;
     private winCon;
     private setIsComplete: Dispatch<SetStateAction<boolean>>
+    private dimensions: [number, number]
+    private startingCoords: [number, number]
+    private startingBoard: Board;
 
-    constructor(number: number, app: Application, setIsComplete: Dispatch<SetStateAction<boolean>>, winCon: string, board?: Board, mainCharacter?: Entity) {
+    constructor(number: number, app: Application, setIsComplete: Dispatch<SetStateAction<boolean>>, dimensions: [number, number], winCon: string, board?: Board, mainCharacter?: Entity) {
 
         this.setIsComplete = setIsComplete;
         this.winCon = winCon;
         this.app = app;
         this.number = number;
+        this.dimensions = dimensions
         // if (levels[number - 1]) {
         //     this.setup = levels[number - 1];
         // } else {
         //     this.setup = levels[0];
         // }
-
-        this.board = (board ? board : new Board({ app }));
+        this.board = (board ? board : new Board({ app, dimensions }));
         this.mainCharacter = (mainCharacter ? mainCharacter : new Entity({ maxHealth: 30, board: this.board, app: this.app, texture: "https://i.postimg.cc/rmXbRc1v/johnathmald.png", me: true }));
+        this.startingCoords = this.mainCharacter.getTileCoords();
+        this.startingBoard = new Board({ app, dimensions });
+        this.startingBoard.cloneFrom(this.board);
+
+
     }
 
 
@@ -46,10 +54,15 @@ export default class Level {
     //and dont you know how sweet it tastes dont you know how sweet it tastes and dont you know how sweet it tastes now that im without yououuuuuuuuu i love newjeans
 
     async init() {
+        await this.app.init({ width: this.dimensions[1] * 60, height: this.dimensions[0] * 60 });
+        document.getElementById("stageDiv")?.appendChild(this.app.canvas);
         await this.board.render();
         console.log("board rendered")
         this.setup && (this.removeListeners = await this.setup(this));
-
+        console.log(this);
+    }
+    public getDimensions() {
+        return this.dimensions;
     }
     public async reload() {
         this.app.stage.removeChildren();
@@ -65,15 +78,14 @@ export default class Level {
     public async renderBoard() {
         await this.board.render();
     }
-    public moveRight() {
-        this.move("right");
-    }
 
-    private move(direction: string) {
+    move(direction: string) {
         this.mainCharacter.move(direction);
+        console.log(this.mainCharacter.getTileCoords());
         if (this.winCon.substring(0, 4) === "move") {
             try {
-                const coords = [parseInt(this.winCon.substring(5, 6)), parseInt(this.winCon.substring(6, 7))] as [number, number]
+                const coords = [parseInt(this.winCon.substring(4, 5)), parseInt(this.winCon.substring(5, 6))] as [number, number]
+                console.log(coords);
                 if (coords[0] === this.mainCharacter.getTileCoords()[0] && coords[1] === this.mainCharacter.getTileCoords()[1]) {
                     this.setIsComplete(true);
                 }
@@ -109,7 +121,7 @@ export default class Level {
 
         const app = new Application();
         const board = new Board({ app, tileList: tiles, dimensions });
-        return new Level(index, app, setIsComplete, "move", board, board.board[mainCoords[0]][mainCoords[1]].getEntities()[0]);
+        return new Level(index, app, setIsComplete, dimensions, "move", board, board.board[mainCoords[0]][mainCoords[1]].getEntities()[0]);
     }
     public toJSON(): {
         tiles: {
@@ -156,10 +168,27 @@ export default class Level {
             {
                 tiles: tileList,
                 index: this.number,
-                dimensions: [this.board.board.length, this.board.board[0].length],
+                dimensions: this.dimensions,
                 mainCoords: this.mainCharacter.getTileCoords()
             }
         )
+    }
+
+    public async reset() {
+        this.board.deRender();
+        console.log("derenderre");
+        this.board = new Board({ app: this.app, dimensions: this.dimensions });
+        this.board.cloneFrom(this.startingBoard);
+        await this.board.render();
+        // console.log(this.board);
+        // console.log(this.board.board[this.startingCoords[0]][this.startingCoords[1]]);
+        // console.log(this.board.board[this.startingCoords[0]][this.startingCoords[1]].getEntities());
+        // console.log(this.board.board[this.startingCoords[0]][this.startingCoords[1]].getEntities()[0].isMe());
+        const mainCharacter = this.board.board[this.startingCoords[0]][this.startingCoords[1]].getMainCharacter();
+        // console.log(mainCharacter);
+        // console.log(mainCharacter?.getSprite());
+        this.mainCharacter = mainCharacter ? mainCharacter : new Entity({ maxHealth: 30, board: this.board, app: this.app, texture: "https://i.postimg.cc/rmXbRc1v/johnathmald.png", me: true, startingCoords: this.startingCoords });
+        // console.log(this.mainCharacter.getSprite());
     }
 
 }

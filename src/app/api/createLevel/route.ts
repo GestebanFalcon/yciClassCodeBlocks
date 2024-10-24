@@ -23,13 +23,15 @@ export async function POST(req: NextRequest) {
                 texture: string
             }[],
             index: number,
-            dimensions: [number, number]
+            dimensions: [number, number],
+            mainCoords: [number, number]
         }
     } = body;
 
     const tileList = [];
 
     for (const tile of levelJSON.tiles) {
+
         const newTile = await prisma.tile.create({
             data: {
                 index: tile.index,
@@ -41,6 +43,16 @@ export async function POST(req: NextRequest) {
                 }
             }
         });
+        if (tile.structure) {
+            const newStructure = await prisma.structure.create({
+                data: {
+                    ...tile.structure,
+                    tile: {
+                        connect: { id: newTile.id }
+                    }
+                }
+            })
+        }
         tileList.push({ id: newTile.id });
     }
 
@@ -49,8 +61,9 @@ export async function POST(req: NextRequest) {
             dimensions: levelJSON.dimensions,
             index: levelJSON.index,
             tiles: {
-                connect: tileList
-            }
+                connect: tileList,
+            },
+            mainCoords: levelJSON.mainCoords
         }
     });
 

@@ -46,13 +46,12 @@ export default class Entity {
         } else {
             this.tileCoords = [0, 0];
         }
-        console.log(this.getTile());
         this.getTile()?.addEntity(this);
         this.texture = texture;
-        this.init(app);
+        // this.init(app);
 
     }
-    private async init(app: Application) {
+    public async render() {
 
         await Assets.load(this.texture);
         console.log("loaded texture of" + this);
@@ -64,17 +63,22 @@ export default class Entity {
         //     this.sprite.height = this.dimensions[1];
         // }
 
-        app.stage.addChild(this.sprite);
+        this.app.stage.addChild(this.sprite);
         console.log("Added child to stage");
-        this.sprite.x = this.tileCoords[0] * 60;
-        this.sprite.y = this.tileCoords[1] * 60;
+        this.sprite.x = this.tileCoords[1] * 60;
+        this.sprite.y = this.tileCoords[0] * 60;
 
         if (!this.me) {
             this.sprite.x += 20;
         }
 
     }
-
+    public isMe() {
+        return this.me;
+    }
+    public getTexture() {
+        return this.texture;
+    }
     public getTileCoords() {
         return this.tileCoords;
     }
@@ -130,6 +134,7 @@ export default class Entity {
 
     }
     public move(direction: string) {
+        console.log();
         const distance = 60;
         const preCoords: [number, number] = [...this.tileCoords];
         this.getTile()?.boonkEntity(this);
@@ -138,33 +143,38 @@ export default class Entity {
             this.tileCoords[1]++;
             if (this.checkCoords(preCoords)) {
                 this.sprite.x += distance;
+                this.board?.board[this.tileCoords[0]][this.tileCoords[1]].addEntity(this);
             }
         }
         if (direction === "left") {
             this.tileCoords[1]--;
             if (this.checkCoords(preCoords)) {
                 this.sprite.x -= distance;
+                this.board?.board[this.tileCoords[0]][this.tileCoords[1]].addEntity(this);
             }
         }
         if (direction === "up") {
             this.tileCoords[0]--;
             if (this.checkCoords(preCoords)) {
                 this.sprite.y -= distance;
+                this.board?.board[this.tileCoords[0]][this.tileCoords[1]].addEntity(this);
             }
         }
         if (direction === "down") {
             this.tileCoords[0]++;
             if (this.checkCoords(preCoords)) {
                 this.sprite.y += distance;
+                this.board?.board[this.tileCoords[0]][this.tileCoords[1]].addEntity(this);
             }
         }
 
     }
     private checkCoords(preCoords: [number, number]): boolean {
-        try {
+        if (this.getTile()) {
             this.getTile()?.addEntity(this); //gettile doesnt work only when the entity is in the proecess of being removed from the program
             return true;
-        } catch (err) {
+        }
+        else {
             console.error("You cannot move out of bounds >:(");
             this.tileCoords = preCoords;
             return false;
@@ -204,6 +214,17 @@ export default class Entity {
         this.board = undefined;
         this.app.stage.removeChild(this.sprite); //ill finish tomorrow. You still need to cut the cord with the tile and yteah. Look at the sheet. Cut the things it refers to then the things that refer to it if possible.
     }
+    public deRender() {
+        this.sprite.destroy();
+    }
+
+    public clone(newBoard: Board): Entity {
+        if (!this.board) {
+            return this; //this should never happen but just in case --- ai generated comment
+        }
+        return new Entity({ board: newBoard, app: this.app, texture: this.texture, me: this.me, startingCoords: this.tileCoords, maxHealth: this.maxHealth });
+    }
+
     public toJSON() {
         return {
             texture: this.texture,
@@ -219,4 +240,7 @@ export default class Entity {
         )
 
     }
+
+
+
 }

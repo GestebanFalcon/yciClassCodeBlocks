@@ -32,7 +32,12 @@ export default class Structure {
         app.stage.addChild(this.sprite);
 
     }
-
+    public async deRender() {
+        this.sprite?.destroy();
+    }
+    public clone(): Structure {
+        return new Structure({ texture: this.texture });
+    }
 
 
 }  
