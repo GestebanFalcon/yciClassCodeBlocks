@@ -1,3 +1,4 @@
+import { Application } from "pixi.js";
 import Tile from "../../tile";
 import Structure from "../structure";
 import Fruit from "./fruit";
@@ -15,9 +16,9 @@ export default class Tree extends Structure {
     private fruitCount: number;
     private type: string;
 
-    constructor({ texture, type }: { texture: string, type: string }) {
+    constructor({ texture, type, app }: { texture: string, type: string, app: Application }) {
 
-        super({ texture })
+        super({ texture, app })
         this.fruitCount = Math.round(Math.random() * 5) + 5;
         this.type = type;
         this.isTree = true;
@@ -40,7 +41,7 @@ export default class Tree extends Structure {
     }
 
     public clone() {
-        return new Tree({ texture: this.texture, type: this.type });
+        return new Tree({ texture: this.texture, type: this.type, app: this.app });
     }
 
     public toJSON() {
@@ -52,9 +53,9 @@ export default class Tree extends Structure {
         return json;
     }
 
-    public static fromJSON({ treeType, texture }: { treeType?: string, texture: string }): any {
+    public static fromJSON({ treeType, texture, app }: { treeType?: string, texture: string, app: Application }): any {
         if (treeType) {
-            return new Tree({ type: treeType, texture });
+            return new Tree({ type: treeType, texture, app: app });
         }
     }
 

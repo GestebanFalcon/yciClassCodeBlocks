@@ -7,7 +7,20 @@ import Entity from "./entity";
 import Structure from "./structure/structure";
 import Board from "./board";
 
-
+export type TileJSON = {
+    entities: {
+        maxHealth: number,
+        texture: string,
+        mainCharacter: boolean,
+    }[],
+    index: [number, number],
+    structure?: {
+        texture: string,
+        treeType?: string,
+    },
+    texture: string,
+    type: "GROUND" | "WALL" | "VOID"
+}
 
 export enum TileType {
     GROUND = "GROUND",
@@ -50,7 +63,7 @@ export default class Tile {
         //should only run if no return earlier
         this.texture = "/"
         if (type === TileType.GROUND) {
-            this.texture = "https://i.postimg.cc/hjLY9wMh/default-Grass-Large.png";
+            this.texture = "https://i.postimg.cc/GmXnNZB0/sandBase.png";
         }
         if (type === TileType.WALL) {
             this.texture = "/"
@@ -63,8 +76,11 @@ export default class Tile {
         return this;
     }
 
+    public getType() {
+        return this.tileType;
+    }
     public async reRender() {
-        this.board.app.stage.removeChild(this.sprite);
+        this.deRender();
         // this.board.app.stage.addChild(this.sprite);
         await this.render(this.sprite.x, this.sprite.y, this.board.app);
     }
@@ -74,7 +90,7 @@ export default class Tile {
         for (const entity of this.entityList) {
             entity.deRender();
         }
-        this.sprite.destroy();
+        this.board.app.stage.removeChild(this.sprite);
     }
 
     public async render(x: number, y: number, app: Application) {
@@ -86,9 +102,17 @@ export default class Tile {
 
         this.sprite.x = x;
         this.sprite.y = y;
+        const timeout = () => {
+            return new Promise(resolve => (
+                setTimeout(resolve, 200)
+            )
+            );
 
+        }
 
-        app.stage.addChild(this.sprite);
+        // await timeout();
+        app.stage.addChild(this.sprite)
+
 
         if (this.structure) {
             await this.structure.render({ app, x, y, width: this.sprite.width, height: this.sprite.height });
@@ -103,8 +127,25 @@ export default class Tile {
         this.structure = structure;
     }
 
+    public removeMe() {
+        // console.log(this);
+        // console.log(this.entityList);
+        // console.log(this.entityList.length);
+        for (let i = 0; this.entityList.length; i++) {
+            console.log(this.entityList[i]);
+            console.log(this.entityList[i].isMe());
+            if (this.entityList[i].isMe()) {
+                this.entityList.splice(i, 1);
+            }
+        }
+    }
     public boonkEntity(boonkedEntity: Entity) {
-        const newEntityList = this.entityList.filter(e => (e !== boonkedEntity));
+
+        const newEntityList = this.entityList.filter(e => {
+
+            return (e !== boonkedEntity);
+        });
+
         this.entityList = newEntityList;
     }
     public addEntity(addedEntity: Entity) {
@@ -124,14 +165,15 @@ export default class Tile {
     //     const entity = this.entityList[0];
     //     return (entity);
     // }
-    public toJSON(index: [number, number]) {
+    public toJSON(index: [number, number]): TileJSON {
         return ({
             entities: (
                 this.getEntities().map(entity => (entity.toJSON()))
             ),
             index,
             texture: this.texture,
-            structure: this.structure
+            structure: this.structure,
+            type: TileType[this.tileType]
         })
     }
     public clone(newBoard: Board) {

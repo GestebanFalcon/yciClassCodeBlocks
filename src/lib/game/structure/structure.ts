@@ -9,14 +9,17 @@ export default class Structure {
     };
     shake?(): any;
     public texture: string;
+    public app: Application;
 
-    constructor({ texture }: { texture: string }) {
+    constructor({ texture, app }: { texture: string, app: Application }) {
         this.isTree = false;
         // this.tile = tile;
         this.texture = texture;
+        this.app = app;
     }
 
     public async render({ app, x, y, width, height }: { app: Application, x: number, y: number, width: number, height: number }) {
+
 
         await Assets.load(this.texture);
         this.sprite = Sprite.from(this.texture);
@@ -33,10 +36,11 @@ export default class Structure {
 
     }
     public async deRender() {
-        this.sprite?.destroy();
+        this.sprite && (this.app.stage.removeChild(this.sprite));
+
     }
     public clone(): Structure {
-        return new Structure({ texture: this.texture });
+        return new Structure({ texture: this.texture, app: this.app });
     }
 
 

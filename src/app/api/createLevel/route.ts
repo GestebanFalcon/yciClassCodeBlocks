@@ -1,6 +1,7 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import prisma from "@/lib/prismadb";
+import { LevelJSON } from "@/lib/game/level";
 
 export async function POST(req: NextRequest) {
     const body = await req.json();
@@ -8,25 +9,14 @@ export async function POST(req: NextRequest) {
 
 
     const { levelJSON }: {
-        levelJSON: {
-            tiles: {
-                entities: {
-                    maxHealth: number,
-                    texture: string,
-                    mainCharacter: boolean,
-                }[],
-                index: [number, number],
-                structure?: {
-                    texture: string,
-                    treeType?: string,
-                },
-                texture: string
-            }[],
-            index: number,
-            dimensions: [number, number],
-            mainCoords: [number, number]
-        }
+        levelJSON: LevelJSON
     } = body;
+
+    const oldLevel = await prisma.level.findFirst({ where: { index: levelJSON.index } });
+
+    if (oldLevel) {
+        await prisma.level.deleteMany({ where: { index: levelJSON.index } });
+    }
 
     const tileList = [];
 
@@ -34,6 +24,7 @@ export async function POST(req: NextRequest) {
 
         const newTile = await prisma.tile.create({
             data: {
+                type: tile.type,
                 index: tile.index,
                 texture: tile.texture,
                 entities: {
@@ -46,7 +37,8 @@ export async function POST(req: NextRequest) {
         if (tile.structure) {
             const newStructure = await prisma.structure.create({
                 data: {
-                    ...tile.structure,
+                    texture: tile.structure.texture,
+                    treeType: tile.structure.treeType,
                     tile: {
                         connect: { id: newTile.id }
                     }
@@ -63,7 +55,8 @@ export async function POST(req: NextRequest) {
             tiles: {
                 connect: tileList,
             },
-            mainCoords: levelJSON.mainCoords
+            mainCoords: levelJSON.mainCoords,
+            winCon: levelJSON.winCon
         }
     });
 

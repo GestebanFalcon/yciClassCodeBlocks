@@ -10,6 +10,9 @@ import { useEffect, useState, useRef } from "react";
 import { Application } from "pixi.js";
 import Level from "@/lib/game/level";
 import { Direction } from "@/lib/game/entity";
+import Tree from "@/lib/game/structure/tree/tree";
+import Tile, { TileType } from "@/lib/game/tile";
+import Link from "next/link";
 
 export default function Display({ levelNumber, adventureName }: { levelNumber: number, adventureName: string }) {
 
@@ -18,7 +21,7 @@ export default function Display({ levelNumber, adventureName }: { levelNumber: n
 
     const [isComplete, setIsComplete] = useState(false);
     const app = new Application();
-    const [level, setLevel] = useState(new Level(levelNumber, app, setIsComplete, [5, 5], "move02"));
+    const [level, setLevel] = useState<Level>(new Level(levelNumber, app, setIsComplete, [5, 5], "move02"));
 
     Blockly.Blocks['move_right'] = {
         init: function () {
@@ -134,15 +137,29 @@ export default function Display({ levelNumber, adventureName }: { levelNumber: n
             const { levelJSON } = body;
             console.log(body);
             console.log(levelJSON);
+
+            await level.init();
+
             if (levelJSON) {
-                const newLevel = Level.fromJSON({ ...levelJSON, setIsComplete });
+                console.log(level);
+                const newLevel = Level.fromJSON({ setIsComplete, tiles: levelJSON.tiles, index: levelJSON.index, mainCoords: levelJSON.mainCoords, dimensions: levelJSON.dimensions, app: level.app, winCon: levelJSON.winCon });
                 console.log(newLevel);
-                setLevel(newLevel);
+                setLevel(prevLevel => {
+                    prevLevel.board.deRender();
+                    return newLevel
+                });
+                //the error is here. In the setlevle. Its not setting it. Why
+                console.log(level);
+            } else {
+                await level.reset();
             }
 
 
-            await level.init();
-            await level.reset();
+            // const newTile = new Tile({ type: TileType.GROUND, board: level.board, structure: new Tree({ texture: "https://static.vecteezy.com/system/resources/thumbnails/026/795/005/small/mango-fruit-tropical-transparent-png.png", type: "mango", app: level.app }) });
+            // level.board.insertTile(0, 2, newTile);
+            // await level.board.board[0][2].render(64, 0, level.app);
+
+
 
 
         }
@@ -150,6 +167,14 @@ export default function Display({ levelNumber, adventureName }: { levelNumber: n
         pixiInit();
 
     }, [])
+    useEffect(() => {
+        console.log(level.mainCharacter);
+        const render = async () => {
+            // await level.init();
+            await level.board.render();
+        }
+        render()
+    }, [level]);
 
     const initApi = (interpreter: any, globalObject: any) => {
         var wrapper = function moveRight() {
@@ -192,16 +217,18 @@ export default function Display({ levelNumber, adventureName }: { levelNumber: n
         {isComplete && (
             <div className=" absolute top-0 left-0 w-full h-full z-50 flex justify-center items-center text-white text-4xl font-bold">
                 <div className=" bg-yellow-200 rounded-lg px-16 py-8 opacity-100 border-gray-900 border-2 flex flex-col items-middle justify-center">
-                    Level 1 Complete!
-                    <p>gold</p>
-                    <div className=" w-12 h-2 bg-black"></div>
+                    Level {levelNumber} Complete!
+                    <p>Good Job</p>
+                    {levelNumber < 3 ? (<Link href={`/levels/${adventureName}/${+levelNumber + 1}`}>Continue</Link>) : <p>Thank You For Playing,<br></br><Link href="/info/review">Leave a review?</Link></p>}
 
                 </div>
             </div>
         )}
         <div id="displayContainerBig" className=" p-8 bg-gray-300">
             <div id="displayContainerLittle" className=" w-full h-full">
-                <div id="stageDiv">
+                <div id="stageDiv" style={{
+                    width: 6 * 32 * 2, height: 6 * 32 * 2
+                }}>
 
                 </div>
                 <button onClick={runCode}>Run</button> <button onClick={async () => {
@@ -213,7 +240,6 @@ export default function Display({ levelNumber, adventureName }: { levelNumber: n
         <div id="blocklyContainer" className=" flex-grow bg-gray-400">
             <div className=' h-full w-full '>
                 <div ref={workspaceRef} id='workspaceDiv' className=" h-full w-full">
-
 
                 </div>
             </div>

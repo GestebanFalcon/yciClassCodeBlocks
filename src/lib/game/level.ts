@@ -2,13 +2,21 @@ import { Application } from "pixi.js";
 import Board from "./board";
 import Entity from "./entity";
 import Tree from "./structure/tree/tree";
-import { TileType } from "./tile";
+import { TileJSON, TileType } from "./tile";
 import Tile from "./tile";
 import { TreeType } from "./structure/tree/tree";
 import { Direction } from "./entity";
 import levels from "./levels/levels";
 import { Dispatch, SetStateAction } from "react";
 
+export type LevelJSON = {
+    tiles: TileJSON[],
+    index: number,
+    dimensions: [number, number],
+    mainCoords: [number, number],
+    winCon: string
+
+}
 
 export default class Level {
 
@@ -37,7 +45,7 @@ export default class Level {
         //     this.setup = levels[0];
         // }
         this.board = (board ? board : new Board({ app, dimensions }));
-        this.mainCharacter = (mainCharacter ? mainCharacter : new Entity({ maxHealth: 30, board: this.board, app: this.app, texture: "https://i.postimg.cc/rmXbRc1v/johnathmald.png", me: true }));
+        this.mainCharacter = (mainCharacter ? mainCharacter : new Entity({ maxHealth: 30, board: this.board, app: this.app, texture: "https://i.postimg.cc/50jSSKGS/robot-Small.png", me: true }));
         this.startingCoords = this.mainCharacter.getTileCoords();
         this.startingBoard = new Board({ app, dimensions });
         this.startingBoard.cloneFrom(this.board);
@@ -54,12 +62,17 @@ export default class Level {
     //and dont you know how sweet it tastes dont you know how sweet it tastes and dont you know how sweet it tastes now that im without yououuuuuuuuu i love newjeans
 
     async init() {
-        await this.app.init({ width: this.dimensions[1] * 60, height: this.dimensions[0] * 60 });
-        document.getElementById("stageDiv")?.appendChild(this.app.canvas);
+        const stageDiv = document.getElementById("stageDiv");
+        await this.app.init({ width: this.dimensions[1] * 32 * 2, height: this.dimensions[0] * 32 * 2, resizeTo: stageDiv ? stageDiv : undefined });
+        this.app.stage.scale.set(2, 2);
+        stageDiv?.appendChild(this.app.canvas);
         await this.board.render();
         console.log("board rendered")
-        this.setup && (this.removeListeners = await this.setup(this));
+        // this.setup && (this.removeListeners = await this.setup(this));
         console.log(this);
+    }
+    public setWinCon(winCon: string) {
+        this.winCon = winCon;
     }
     public getDimensions() {
         return this.dimensions;
@@ -98,49 +111,22 @@ export default class Level {
     public getNumber() {
         return this.number;
     }
-    public static fromJSON({ tiles, index, setIsComplete, dimensions, mainCoords }:
+    public static fromJSON({ tiles, index, setIsComplete, dimensions, mainCoords, app, winCon }:
         {
-            tiles: {
-                entities: {
-                    maxHealth: number,
-                    texture: string,
-                    mainCharacter: boolean,
-                }[],
-                index: [number, number],
-                structure?: {
-                    texture: string,
-                    treeType?: string,
-                },
-                texture: string
-            }[],
+            tiles: TileJSON[],
             index: number,
             setIsComplete: Dispatch<SetStateAction<boolean>>,
             dimensions: [number, number],
-            mainCoords: [number, number]
+            mainCoords: [number, number],
+            app: Application,
+            winCon: string
         }) {
 
-        const app = new Application();
         const board = new Board({ app, tileList: tiles, dimensions });
-        return new Level(index, app, setIsComplete, dimensions, "move", board, board.board[mainCoords[0]][mainCoords[1]].getEntities()[0]);
+        console.log(board.board[mainCoords[0]][mainCoords[1]]);
+        return new Level(index, app, setIsComplete, dimensions, winCon, board, board.board[mainCoords[0]][mainCoords[1]].getEntities()[0]);
     }
-    public toJSON(): {
-        tiles: {
-            entities: {
-                maxHealth: number,
-                texture: string,
-                mainCharacter: boolean,
-            }[],
-            index: [number, number],
-            structure?: {
-                texture: string,
-                treeType?: string,
-            },
-            texture: string
-        }[],
-        index: number,
-        dimensions: [number, number],
-        mainCoords: [number, number]
-    } {
+    public toJSON(): LevelJSON {
 
         const tileList: {
             entities: {
@@ -153,7 +139,8 @@ export default class Level {
                 texture: string,
                 treeType?: string,
             },
-            texture: string
+            texture: string,
+            type: "GROUND" | "VOID" | "WALL"
         }[] = []
 
         for (let i = 0; i < this.board.board.length; i++) {
@@ -169,7 +156,8 @@ export default class Level {
                 tiles: tileList,
                 index: this.number,
                 dimensions: this.dimensions,
-                mainCoords: this.mainCharacter.getTileCoords()
+                mainCoords: this.mainCharacter.getTileCoords(),
+                winCon: this.winCon
             }
         )
     }

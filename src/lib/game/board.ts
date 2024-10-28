@@ -1,5 +1,5 @@
 import { Application, Sprite, Assets } from "pixi.js";
-import Tile, { TileType } from "./tile";
+import Tile, { TileJSON, TileType } from "./tile";
 import Entity from "./entity";
 import Structure from "./structure/structure";
 import Tree from "./structure/tree/tree";
@@ -13,56 +13,47 @@ export default class Board {
     public board: Tile[][] = [];
     // dimensions height by width like a matrix. 4x2 matrix is 4 high 2 wide yknow
     constructor({ app, tileList, dimensions }: {
-        app: Application, tileList?: {
-            entities: {
-                maxHealth: number,
-                texture: string,
-                mainCharacter: boolean,
-            }[],
-            index: [number, number],
-            structure?: {
-                treeType?: string,
-                texture: string
-            },
-            texture: string
-        }[],
+        app: Application, tileList?: TileJSON[],
         dimensions?: [number, number]
     }) {
         this.app = app
 
         //if order is not preserved when testing change it to just make the arrays full of null shit and then each tile put it in its exact spot and then assign the finished thing to this.board
         if (tileList && dimensions) {
+            console.log("data provided");
             let currentTile;
             for (let i = 0; i < dimensions[0]; i++) {
                 this.board[i] = []
                 for (let j = 0; j < dimensions[1]; j++) {
                     currentTile = tileList[(i * dimensions[1]) + j];
-                    const entitiesList = currentTile.entities.map(entity => new Entity({ app, board: this, maxHealth: entity.maxHealth, texture: entity.texture, me: entity.mainCharacter }));
+                    const entitiesList = currentTile.entities.map(entity => new Entity({ app, board: this, maxHealth: entity.maxHealth, texture: entity.texture, me: entity.mainCharacter, startingCoords: [i, j] }));
                     const options: { board: Board, type: TileType, textureURL: string, entities: Entity[], structure?: Structure } = {
                         board: this,
-                        type: TileType.GROUND,
+                        type: TileType[currentTile.type],
                         textureURL: currentTile.texture,
                         entities: entitiesList,
 
                     }
-                    currentTile.structure && (options.structure = Tree.fromJSON({ treeType: currentTile.structure.treeType, texture: currentTile.structure.texture }))
+                    currentTile.structure && (options.structure = Tree.fromJSON({ treeType: currentTile.structure.treeType, texture: currentTile.structure.texture, app: this.app }))
                     //I shouldn't need to spread here but I'll put a comment just in case it breaks.
                     this.board[i][j] = new Tile(options);
                 }
             }
-        }
-        if (dimensions) {
-            for (let i = 0; i < dimensions[0]; i++) {
-                this.board[i] = [];
-                for (let j = 0; j < dimensions[1]; j++) {
-                    this.board[i][j] = new Tile({ type: TileType.GROUND, board: this });
-                }
-            }
+            console.log(this.board[5][1]);
         } else {
-            for (let i = 0; i < 5; i++) {
-                this.board[i] = [];
-                for (let j = 0; j < 5; j++) {
-                    this.board[i][j] = new Tile({ type: TileType.GROUND, board: this });
+            if (dimensions) {
+                for (let i = 0; i < dimensions[0]; i++) {
+                    this.board[i] = [];
+                    for (let j = 0; j < dimensions[1]; j++) {
+                        this.board[i][j] = new Tile({ type: TileType.GROUND, board: this });
+                    }
+                }
+            } else {
+                for (let i = 0; i < 5; i++) {
+                    this.board[i] = [];
+                    for (let j = 0; j < 5; j++) {
+                        this.board[i][j] = new Tile({ type: TileType.GROUND, board: this });
+                    }
                 }
             }
         }
@@ -76,8 +67,7 @@ export default class Board {
         console.log("rendering board");
         for (let i = 0; i < this.board.length; i++) {
             for (let j = 0; j < this.board[i].length; j++) {
-
-                await this.board[i][j].render(j * 60, i * 60, this.app);
+                await this.board[i][j].render(j * 32, i * 32, this.app);
 
             }
         }
@@ -88,10 +78,11 @@ export default class Board {
 
         this.board[i][j].deRender();
         this.board[i][j] = tile;
+        this.board[i][j].render(j * 32, i * 32, this.app);
 
 
     }
-    public async deRender() {
+    public deRender() {
         for (let i = 0; i < this.board.length; i++) {
             for (let j = 0; j < this.board[i].length; j++) {
                 this.board[i][j].deRender();

@@ -1,8 +1,9 @@
-import { Application, Sprite, Assets } from "pixi.js";
+import { Application, Sprite, Assets, AnimatedSprite } from "pixi.js";
 import Board from "./board";
 import Fruit from "./structure/tree/fruit";
 import Item from "./item";
 import Tree from "./structure/tree/tree";
+import { TileType } from "./tile";
 
 export enum Direction {
     UP,
@@ -18,15 +19,16 @@ export default class Entity {
     // reference value SHOULD allow direct manipulation of board. I know its really weird but trust
     private me: boolean
     private tileCoords: [number, number]
-    private sprite!: Sprite;
+    private sprite: Sprite;
     private texture: string;
+    private textures: string[];
     private health: number;
     private maxHealth: number;
     private inventory: Fruit[];
     private dimensions?: [number, number]
 
-    constructor({ board, app, texture, me, startingCoords, maxHealth, dimensions }: { board: Board, app: Application, texture: string, me: boolean, startingCoords?: [number, number], dimensions?: [number, number], maxHealth: number }) {
-
+    constructor({ board, app, texture, me, startingCoords, maxHealth, dimensions, textures }: { board: Board, app: Application, texture: string, me: boolean, startingCoords?: [number, number], dimensions?: [number, number], maxHealth: number, textures?: string[] }) {
+        this.textures = (textures ? [texture, ...textures] : [texture]);
         if (dimensions) {
             this.dimensions = dimensions;
         }
@@ -49,13 +51,18 @@ export default class Entity {
         this.getTile()?.addEntity(this);
         this.texture = texture;
         // this.init(app);
+        this.sprite = new Sprite();
 
     }
     public async render() {
 
-        await Assets.load(this.texture);
+        await Assets.load(this.textures);
         console.log("loaded texture of" + this);
+        if (this.sprite) {
+            this.deRender();
+        }
         this.sprite = Sprite.from(this.texture);
+
         this.sprite.zIndex = 1
 
         // if (this.dimensions) {
@@ -65,8 +72,8 @@ export default class Entity {
 
         this.app.stage.addChild(this.sprite);
         console.log("Added child to stage");
-        this.sprite.x = this.tileCoords[1] * 60;
-        this.sprite.y = this.tileCoords[0] * 60;
+        this.sprite.x = this.tileCoords[1] * 32;
+        this.sprite.y = this.tileCoords[0] * 32;
 
         if (!this.me) {
             this.sprite.x += 20;
@@ -133,9 +140,19 @@ export default class Entity {
         console.log("yum yum " + this.health);
 
     }
+    public teleport(coords: [number, number]) {
+        this.sprite.x = coords[1] * 32
+        this.sprite.y = coords[0] * 32
+        console.log(this.getTile()?.getEntities());
+        this.getTile()?.boonkEntity(this);
+        console.log(this.getTile()?.getEntities());
+        this.setTileCoords([...coords]);
+        this.getTile()?.addEntity(this);
+        console.log(this.getTile()?.getEntities());
+    }
     public move(direction: string) {
         console.log();
-        const distance = 60;
+        const distance = 32;
         const preCoords: [number, number] = [...this.tileCoords];
         this.getTile()?.boonkEntity(this);
 
@@ -170,15 +187,13 @@ export default class Entity {
 
     }
     private checkCoords(preCoords: [number, number]): boolean {
-        if (this.getTile()) {
-            this.getTile()?.addEntity(this); //gettile doesnt work only when the entity is in the proecess of being removed from the program
-            return true;
-        }
-        else {
+        if (!this.getTile() || (this.getTile()?.getType() === TileType.VOID)) {
             console.error("You cannot move out of bounds >:(");
             this.tileCoords = preCoords;
             return false;
         }
+        this.getTile()?.addEntity(this); //gettile doesnt work only when the entity is in the proecess of being removed from the program
+        return true;
     }
     private getTile() {
         return (this.board?.board[this.tileCoords[0]][this.tileCoords[1]]);
@@ -208,6 +223,9 @@ export default class Entity {
 
         }
     }
+    public setTileCoords(coords: [number, number]) {
+        this.tileCoords = [...coords];
+    }
     public death() {
         //it should really have a board. it is definitely assigned in the constructor and can only be undefined after this or if i pass in undefined like an ape
         this.getTile()?.boonkEntity(this)
@@ -215,7 +233,7 @@ export default class Entity {
         this.app.stage.removeChild(this.sprite); //ill finish tomorrow. You still need to cut the cord with the tile and yteah. Look at the sheet. Cut the things it refers to then the things that refer to it if possible.
     }
     public deRender() {
-        this.sprite.destroy();
+        this.app.stage.removeChild(this.sprite);
     }
 
     public clone(newBoard: Board): Entity {
