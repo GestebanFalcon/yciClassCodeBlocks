@@ -12,8 +12,8 @@ export default function LevelNavbar() {
             </div>
             <div className=" h-full p-4">
                 <div className=" bg-slate-400 h-full mx-auto rounded-full border-blue-950 border-2 flex p-2 gap-2">
-                    {levels.map(level => (
-                        <Link href={`/levels/beta/${level}`} className="rounded-full border-2 font-semibold px-2 bg-yellow-500 ">{level}</Link>
+                    {levels.map((level, index) => (
+                        <Link href={`/levels/beta/${level}`} className="rounded-full border-2 font-semibold px-2 bg-yellow-500" key={index}>{level}</Link>
                     ))}
                 </div>
             </div>
