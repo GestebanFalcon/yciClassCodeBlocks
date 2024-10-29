@@ -8,7 +8,7 @@ export default function LevelNavbar() {
                 <Link href="/info" className="flex  justify-center items-center mx-8 font-semibold text-2xl">
                     <img src="https://i.postimg.cc/zvvGXfMY/palmTree.png" className=" object-scale-down h-12 mx-2"></img>
                 </Link>
-                <Link href="/levels/editor/?levelNumber=1">Edit</Link>
+                {/* <Link href="/levels/editor/?levelNumber=1">Edit</Link> */}
             </div>
             <div className=" h-full p-4">
                 <div className=" bg-slate-400 h-full mx-auto rounded-full border-blue-950 border-2 flex p-2 gap-2">
