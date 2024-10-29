@@ -225,9 +225,9 @@ export default function Display({ levelNumber, adventureName }: { levelNumber: n
             </div>
         )}
         <div id="displayContainerBig" className=" p-8 bg-gray-300">
-            <div id="displayContainerLittle" className=" w-full h-full">
-                <div id="stageDiv" style={{
-                    width: 6 * 32 * 2, height: 6 * 32 * 2
+            <div id="displayContainerLittle" className=" w-full h-full ">
+                <div id="stageDiv" className="border-2 border-slate-950 shadow-lg" style={{
+                    width: 6 * 32 * 2, height: 6 * 32 * 2,
                 }}>
 
                 </div>
