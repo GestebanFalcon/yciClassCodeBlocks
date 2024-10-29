@@ -1,4 +1,5 @@
-
+"use client"
+import { Suspense } from "react";
 import Display from "./display";
 
 export default function Editor() {
@@ -8,7 +9,9 @@ export default function Editor() {
 
     return (
         <>
-            <Display />
+            <Suspense>
+                <Display />
+            </Suspense>
         </>
     )
 }
