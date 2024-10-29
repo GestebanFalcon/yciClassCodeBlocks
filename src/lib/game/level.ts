@@ -6,7 +6,7 @@ import { TileJSON, TileType } from "./tile";
 import Tile from "./tile";
 import { TreeType } from "./structure/tree/tree";
 import { Direction } from "./entity";
-import levels from "./levels/levels";
+// import levels from "./levels/levels";
 import { Dispatch, SetStateAction } from "react";
 
 export type LevelJSON = {
