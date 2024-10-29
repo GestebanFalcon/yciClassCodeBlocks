@@ -22,7 +22,7 @@ export default function Review() {
                 <form onSubmit={handleReview}>
                     <h2>Leave a review:</h2>
                     <input type="text" value={message} onChange={(e) => setMessage(e.target.value)}></input>
-                    <button className="bg-gray-200 font-semibold text-slate-900" type="submit"></button>
+                    <button className="bg-gray-200 font-semibold text-slate-900" type="submit">submit</button>
                 </form>
             </div>
         </div>
