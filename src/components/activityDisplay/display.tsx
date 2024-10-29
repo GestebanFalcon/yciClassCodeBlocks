@@ -40,7 +40,7 @@ export default function Display() {
             </div> */}
 
             <div className="p-0 absolute w-2/3 h-full bg-red-500" style={{ left: 0 }}>
-                <Workspace />
+                {/* <Workspace toolbox={{}} /> */}
             </div>
 
             {/* <div className="absolute w-1/3 h-full bg-blue-500">
