@@ -12,6 +12,7 @@
   "dependencies": {
     "@pixi/react": "^7.1.2",
     "@prisma/client": "^5.20.0",
+    "@types/next": "^9.0.0",
     "@types/react-resizable": "^3.0.7",
     "blockly": "^10.4.3",
     "dotenv-cli": "^7.4.2",
